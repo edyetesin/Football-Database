@@ -1,0 +1,116 @@
+
+
+--- To view all my tables are in order and ready for Querying 
+
+select * from player_stats;
+select * from footballers;
+select * from nationalities;
+select * from Teams;
+select * from Leagues;
+
+
+----Retrieve the top 5 players with the highest number of goals across all leagues.
+
+select f.player_name, t.team_name, ps.Goals as No_Of_Goals
+from footballers f
+join player_stats ps on f.player_ID = ps.Player_ID 
+join teams t on f.team_id = t.team_id  
+group by f.player_name, t.team_name, ps.Goals 
+order by ps.Goals desc
+limit 5;
+
+
+---Find all players who have played in over 35 matches and have a goal-per-match ratio of greater than 0.5.
+
+select player_name, Goals, Matches_played, (Goals/Matches_played) As GoalsPerMatch 
+from footballers f
+join player_stats ps on f.player_ID =  ps.player_ID
+where Matches_played > 35 and (Goals/Matches_played) > 0.5
+order by goals desc;
+
+
+----List all teams that have players from more than 1 different nationalities.
+
+SELECT T.Team_Name, COUNT(DISTINCT N.Nationality_ID) AS Nationality_Count
+FROM Footballers F
+JOIN Teams T ON F.Team_ID = T.Team_ID
+JOIN Nationalities N ON F.Nationality_ID = N.Nationality_ID
+GROUP BY T.Team_Name
+HAVING Nationality_Count > 1;
+
+
+
+------ Retrieve the team with the highest number of yellow cards accumulated by its players
+
+SELECT T.Team_Name, SUM( PS.YELLOW_CARDS) AS TOTAL_YELLOWCARDS
+FROM Footballers F
+JOIN Teams T ON F.Team_ID = T.Team_ID
+JOIN Player_Stats Ps ON F.PLAYER_ID = PS.PLAYER_ID 
+GROUP BY T.Team_Name
+ORDER BY TOTAL_YELLOWCARDS DESC 
+LIMIT 1 ;
+
+
+------Find all players who have more than 10 assists but have received no red cards
+
+SELECT f.Player_name, t.team_name, ps.Assists
+FROM Footballers F
+JOIN Teams T ON F.Team_ID = T.Team_ID
+JOIN Player_Stats Ps ON F.PLAYER_ID = PS.PLAYER_ID
+where Assists > 10 and Red_cards = 0 
+GROUP BY f.Player_name, t.team_name , ps.Assists;
+
+
+
+-----list the youngest player from each nationality 
+
+SELECT N.Nationality_Name, F.Player_Name, F.Age
+FROM Footballers F
+JOIN Nationalities N ON F.Nationality_ID = N.Nationality_ID
+WHERE F.Age = (
+    SELECT MIN(F2.Age)
+    FROM Footballers F2
+    WHERE F2.Nationality_ID = F.Nationality_ID
+)
+ORDER BY F.Age;
+
+
+-----Retrieve all players who have played for teams in both 'Premier League' and 'La Liga'.
+
+SELECT DISTINCT F.Player_Name
+FROM Footballers F
+JOIN Teams T ON F.Team_ID = T.Team_ID
+JOIN Leagues L ON T.League_ID = L.League_ID
+WHERE L.League_Name IN ('Premier League', 'La Liga')
+GROUP BY F.Player_Name
+HAVING COUNT(DISTINCT L.League_ID) > 1;
+
+-----Find the average number of goals scored by forwards (Position = 'Forward') in Serie A
+
+SELECT AVG(PS.Goals) AS Avg_Goals
+FROM Footballers F
+JOIN Player_Stats PS ON F.Player_ID = PS.Player_ID
+JOIN Teams T ON F.Team_ID = T.Team_ID
+JOIN Leagues L ON T.League_ID = L.League_ID
+WHERE F.Position = 'Forward' AND L.League_Name = 'Serie A';
+
+
+------ List all teams where the average age of their players is greater than 30.
+
+SELECT T.Team_name , Avg(F.Age) As Average_age 
+FROM Teams T 
+JOIN Footballers F on T.Team_ID = F.Team_ID 
+group by T.Team_name 
+Having Average_age > 30 ;
+
+
+
+-----Find the team with the fewest total minutes played by its players.
+
+SELECT T.Team_name ,sum(PS.Minutes_Played) As Total_Minutes_played
+from Player_stats ps
+JOIN footballers f on ps.Player_ID = f.Player_ID
+JOIN Teams T on f.Team_ID = T.Team_ID
+GROUP BY T.Team_name
+ORDER BY Total_Minutes_played
+limit 1; 

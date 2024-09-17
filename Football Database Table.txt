@@ -1,0 +1,179 @@
+---- First Step, i created the Nationalities table
+CREATE TABLE Nationalities (
+    Nationality_ID INT PRIMARY KEY AUTO_INCREMENT,
+    Nationality_Name VARCHAR(50)
+);
+
+---- Step 2 , i created the Leagues table
+CREATE TABLE Leagues (
+    League_ID INT PRIMARY KEY AUTO_INCREMENT,
+    League_Name VARCHAR(100),
+    Country VARCHAR(50)
+);
+
+
+--- step 3, created the teams table
+CREATE TABLE Teams (
+    Team_ID INT PRIMARY KEY AUTO_INCREMENT,
+    Team_Name VARCHAR(100),
+    League_ID INT,
+    Manager VARCHAR(100),
+    Home_Stadium VARCHAR(100),
+    Established_Year INT,
+    FOREIGN KEY (League_ID) REFERENCES Leagues(League_ID)
+);
+
+
+--- step 4, created the footballers table
+CREATE TABLE Footballers (
+    Player_ID INT PRIMARY KEY AUTO_INCREMENT,
+    Player_Name VARCHAR(100),
+    Nationality_ID INT,
+    Age INT,
+    Team_ID INT,
+    Position VARCHAR(50),
+    Height DECIMAL(3,2),
+    Weight DECIMAL(5,2),
+    FOREIGN KEY (Nationality_ID) REFERENCES Nationalities(Nationality_ID),
+    FOREIGN KEY (Team_ID) REFERENCES Teams(Team_ID)
+);
+
+----- step 5, created player stats 
+CREATE TABLE Player_Stats (
+    Stat_ID INT PRIMARY KEY AUTO_INCREMENT,
+    Player_ID INT,
+    Matches_Played INT,
+    Goals INT,
+    Assists INT,
+    Yellow_Cards INT,
+    Red_Cards INT,
+    Minutes_Played INT,
+    FOREIGN KEY (Player_ID) REFERENCES Footballers(Player_ID)
+);
+
+
+----- Time to insert data into tables
+
+------leagues first
+
+INSERT INTO Leagues (League_Name, Country) 
+VALUES 
+('Premier League', 'England'),
+('La Liga', 'Spain'),
+('Bundesliga', 'Germany'),
+('Serie A', 'Italy'),
+('Ligue 1', 'France'),
+('Eredivisie', 'Netherlands'),
+('Primeira Liga', 'Portugal'),
+('Major League Soccer', 'USA'),
+('Super Lig', 'Turkey'),
+('Scottish Premiership', 'Scotland'),
+('Jupiler Pro League', 'Belgium'),
+('Russian Premier League', 'Russia'),
+('Chinese Super League', 'China'),
+('A-League', 'Australia'),
+('Brasileirão', 'Brazil'),
+('Liga MX', 'Mexico'),
+('Argentine Primera División', 'Argentina'),
+('Allsvenskan', 'Sweden'),
+('Ukrainian Premier League', 'Ukraine'),
+('Swiss Super League', 'Switzerland');
+
+
+------ Teams next 
+INSERT INTO Teams (Team_Name, League_ID, Manager, Home_Stadium, Established_Year) 
+VALUES 
+('Manchester United', 1, 'Erik ten Hag', 'Old Trafford', 1878),
+('Chelsea', 1, 'Enzo Maresca', 'Stamford Bridge', 1905),
+('Liverpool', 1, 'Arne Slot', 'Anfield', 1892),
+('Real Madrid', 2, 'Carlo Ancelotti', 'Santiago Bernabéu', 1902),
+('Barcelona', 2, 'Hansi Flick', 'Camp Nou', 1899),
+('Atletico Madrid', 2, 'Diego Simeone', 'Wanda Metropolitano', 1903),
+('Bayern Munich', 3, 'Vincent Kompany', 'Allianz Arena', 1900),
+('Borussia Dortmund', 3, 'Edin Terzić', 'Signal Iduna Park', 1909),
+('Juventus', 4, 'Massimiliano Allegri', 'Allianz Stadium', 1897),
+('Inter Milan', 4, 'Simone Inzaghi', 'San Siro', 1908),
+('Paris Saint-Germain', 5, 'Luis Enrique', 'Parc des Princes', 1970),
+('Olympique Lyonnais', 5, 'Pierre sage', 'Groupama Stadium', 1950),
+('Ajax', 6, 'Farioli Francesco', 'Johan Cruyff Arena', 1900),
+('FC Porto', 7, 'Bruno Vitor', 'Estádio do Dragão', 1893),
+('Sporting CP', 7, 'Rúben Amorim', 'Estádio José Alvalade', 1906),
+('LA Galaxy', 8, 'Greg Vanney', 'Dignity Health Sports Park', 1994),
+('Celtic', 10, 'Brendan Rodgers', 'Celtic Park', 1887),
+('Fenerbahce', 9, 'Jose Mourinho', 'Şükrü Saracoğlu Stadium', 1907),
+('Flamengo', 15, 'Tite', 'Maracanã Stadium', 1895),
+('River Plate', 17, 'Gallardo Marcelo', 'Monumental Stadium', 1901);
+
+
+----- 
+
+INSERT INTO Nationalities (Nationality_Name) 
+VALUES 
+('English'), 
+('Spanish'), 
+('German'), 
+('Italian'), 
+('French'), 
+('Portuguese'), 
+('Dutch'), 
+('American'), 
+('Brazilian'), 
+('Argentine'), 
+('Mexican'), 
+('Belgian'), 
+('Turkish'), 
+('Scottish'), 
+('Swedish'), 
+('Australian'), 
+('Russian'), 
+('Chinese'), 
+('Ukrainian'), 
+('Swiss');
+
+
+INSERT INTO Footballers (Player_Name, Nationality_ID, Age, Team_ID, Position, Height, Weight) 
+VALUES 
+('Marcus Rashford', 1, 25, 1, 'Forward', 1.80, 70.5),
+('Harry Kane', 1, 30, 1, 'Forward', 1.88, 85.0),
+('Raheem Sterling', 1, 29, 2, 'Forward', 1.70, 69.0),
+('Karim Benzema', 2, 35, 4, 'Forward', 1.85, 81.0),
+('Pedri', 2, 21, 5, 'Midfielder', 1.74, 65.0),
+('Toni Kroos', 3, 34, 4, 'Midfielder', 1.82, 76.0),
+('Joshua Kimmich', 3, 29, 7, 'Midfielder', 1.77, 73.0),
+('Manuel Neuer', 3, 37, 7, 'Goalkeeper', 1.93, 93.0),
+('Cristiano Ronaldo', 6, 39, 15, 'Forward', 1.87, 83.0),
+('Lionel Messi', 10, 37, 17, 'Forward', 1.70, 67.0),
+('Neymar Jr', 9, 32, 13, 'Forward', 1.75, 68.0),
+('Gareth Bale', 1, 34, 16, 'Forward', 1.83, 82.0),
+('Frenkie de Jong', 7, 27, 5, 'Midfielder', 1.80, 74.0),
+('Virgil van Dijk', 7, 32, 3, 'Defender', 1.93, 92.0),
+('Sergio Ramos', 2, 38, 6, 'Defender', 1.84, 81.0),
+('Robert Lewandowski', 3, 35, 5, 'Forward', 1.85, 81.0),
+('Mohamed Salah', 9, 32, 3, 'Forward', 1.75, 71.0),
+('Kylian Mbappe', 5, 25, 11, 'Forward', 1.78, 73.0),
+('Zlatan Ibrahimović', 15, 42, 10, 'Forward', 1.95, 95.0),
+('Paulo Dybala', 10, 30, 17, 'Forward', 1.77, 75.0);
+
+
+INSERT INTO Player_Stats (Player_ID, Matches_Played, Goals, Assists, Yellow_Cards, Red_Cards, Minutes_Played) 
+VALUES 
+(1, 38, 17, 10, 3, 0, 3200),
+(2, 36, 21, 5, 4, 0, 3000),
+(3, 34, 13, 9, 2, 1, 2900),
+(4, 32, 20, 8, 1, 0, 2850),
+(5, 40, 7, 11, 4, 1, 3500),
+(6, 33, 5, 10, 5, 0, 3200),
+(7, 39, 8, 15, 3, 1, 3400),
+(8, 30, 0, 0, 1, 0, 3060),
+(9, 38, 24, 6, 3, 0, 3300),
+(10, 36, 18, 10, 3, 0, 3200),
+(11, 33, 16, 12, 5, 0, 2900),
+(12, 34, 10, 4, 3, 1, 3000),
+(13, 40, 3, 12, 6, 0, 3500),
+(14, 32, 2, 2, 8, 0, 2850),
+(15, 31, 4, 4, 7, 1, 2800),
+(16, 36, 22, 9, 4, 0, 3100),
+(17, 37, 19, 8, 4, 0, 3100),
+(18, 33, 30, 11, 6, 0, 2800),
+(19, 31, 9, 5, 7, 1, 2700),
+(20, 35, 14, 10, 3, 0, 2950);
